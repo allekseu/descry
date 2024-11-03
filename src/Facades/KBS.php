@@ -1,6 +1,6 @@
 <?php
 
-namespace Descry\KBS\Facades;
+namespace Descry\Facades;
 
 use Descry\KBS\Client;
 use Illuminate\Support\Facades\Facade;
@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Descry\KBS\Client
  *
- * @method static \Descry\KBS\Responses\ScheduleResponse getSchedule()
- * @method static \Descry\KBS\Responses\StreamResponse getStream()
+ * @method static \Descry\KBS\Responses\ListingResponse getListing(\Descry\KBS\Utils\Parameters $parameters)
+ * @method static \Descry\KBS\Responses\StreamResponse getStream(\Descry\KBS\Utils\Parameters $parameters)
  */
 class KBS extends Facade
 {
