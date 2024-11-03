@@ -34,8 +34,8 @@ return StreamResource::make(
 ```
 
 ## __LIMITATIONS__
-- If a Descry formatted response returns null for a value, it either means:
+- If a Descry formatted response returns null (or an empty array where applicable) for a value, it either means that:
     - The information does not exist
     - The API changed
 - Response times, beyond necessary treatment by the wrapper, are entirely dependent on stations servers.
-    - [ :exclamation: May be removed] Descry makes an additional call on manifest URLs to determine if they are DRM protected. These calls are cached for 60 minutes.
+    - [ :exclamation: May be removed ] Descry makes an additional call on manifest URLs to determine if they are DRM protected. These calls can take a few seconds, and are thus cached for 60 minutes.

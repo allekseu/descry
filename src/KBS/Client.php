@@ -14,9 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class Client
 {
@@ -52,22 +50,12 @@ class Client
      */
     private function request(PendingRequest $client, string $endpoint, array $parameters = [])
     {
-        $cache = Cache::get("kbs.{$endpoint}." . implode("", $parameters));
+        $response = $client->withQueryParameters($parameters)->get($endpoint);
 
-        if (!$cache) {
-            $response = $client->withQueryParameters($parameters)->get($endpoint);
-
-            if ($response->getStatusCode() == Response::HTTP_OK) {
-                Log::info("API KBS CALL " . $response->getStatusCode() . " ON " . $response->effectiveUri()->__toString());
-                return Cache::remember("kbs" . implode("", $parameters), 60, function () use ($response) {
-                    return $response->json();
-                });
-            } else {
-                Log::error("API KBS ERROR " . $response->getStatusCode() . " ON " . $response->effectiveUri()->__toString());
-                return [Arr::get($response->json(), "error")];
-            }
+        if ($response->getStatusCode() == Response::HTTP_OK) {
+            return $response->json();
         } else {
-            return $cache;
+            return [Arr::get($response->json(), "error")];
         }
     }
 
@@ -77,6 +65,14 @@ class Client
      */
     public function getStream(Parameters $parameters): StreamResponse
     {
+        if (!$parameters->getAreaCode()) {
+            throw new ValidationException("Missing request parameter: area_code", Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if (!$parameters->getChannelCode()) {
+            throw new ValidationException("Missing request parameter: channel_code", Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $channelCode = $parameters->getAreaCode() != "00" ? "{$parameters->getAreaCode()}_{$parameters->getChannelCode()}" : $parameters->getChannelCode();
 
         $response = $this->request(
@@ -126,21 +122,4 @@ class Client
             throw new ResponseException("API Response Error: " . $response[0], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-    // /**
-    //  * @param string|null $programeCode
-    //  * @return \Illuminate\Support\Collection
-    //  */
-    // public function getProgram(?string $programeCode = null): Collection
-    // {
-    //     $parameters = [
-    //         "program_code" => $programeCode
-    //     ];
-
-    //     $response = $this->request("contents", $parameters);
-
-    //     return collect(Arr::get($response, "data"))->map(function (array $program) {
-    //         return Mapper::mapProgram($program);
-    //     });
-    // }
 }

@@ -7,8 +7,8 @@ namespace Descry\Utils;
 use Illuminate\Support\Str;
 
 /**
- * @method static hydrate(...$parameters)
- * @method array toArray()
+ * @method static   hydrate(...$parameters)
+ * @method array    toArray()
  */
 class DTO
 {
@@ -22,8 +22,6 @@ class DTO
     }
 
     /**
-     * Create a new resource instance.
-     *
      * @param  mixed  ...$parameters
      * @return static
      */
