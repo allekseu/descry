@@ -14,6 +14,7 @@ class TrackResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\TrackResponse $this */
         return [
             "trackBitrate"  => $this->getTrackBitrate(),
             "trackCode"     => $this->getTrackCode(),

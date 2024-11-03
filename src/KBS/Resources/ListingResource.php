@@ -16,6 +16,7 @@ class ListingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\ListingResponse $this */
         return [
             "channel"           => $this->getChannel() ? ChannelResource::make($this->getChannel()) : null,
             "schedules"         => ScheduleResource::collection($this->getChannelSchedules())

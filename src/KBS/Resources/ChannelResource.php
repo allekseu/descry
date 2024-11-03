@@ -14,6 +14,7 @@ class ChannelResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\ChannelResponse $this */
         return [
             "areaCode"          => $this->getAreaCode(),
             "areaName"          => $this->getAreaName(),

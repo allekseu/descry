@@ -16,6 +16,7 @@ class StreamResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\StreamResponse $this */
         return [
             "channel"           => $this->getChannel() ? ChannelResource::make($this->getChannel()) : null,
             "channelTracks"     => TrackResource::collection($this->getChannelTracks())

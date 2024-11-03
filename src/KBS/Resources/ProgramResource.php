@@ -14,6 +14,7 @@ class ProgramResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\ProgramResponse $this */
         return [
             "programBroadcast"      => $this->getProgramBroadcast(),
             "programCode"           => $this->getProgramCode(),

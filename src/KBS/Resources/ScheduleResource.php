@@ -15,6 +15,7 @@ class ScheduleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var \Descry\KBS\Responses\ScheduleResponse $this */
         return [
             "program"               => $this->getProgram() ? ProgramResource::make($this->getProgram()) : null,
             "scheduleDateEnd"       => $this->getScheduleDatetimeEnd()?->format("Y-m-d"),
