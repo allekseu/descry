@@ -9,10 +9,10 @@ use Descry\Utils\DTO;
 use Illuminate\Support\Arr;
 
 /**
- * @method \Descry\KBS\Responses\ChannelResponse|null     getChannel()
- * @method self                                                 setChannel(array $channel = [])
- * @method array                                                getChannelSchedules()
- * @method self                                                 setChannelSchedules(array $channelSchedules = [])
+ * @method \Descry\KBS\Responses\ChannelResponse|null   getChannel()
+ * @method self                                         setChannel(array $channel = [])
+ * @method array                                        getChannelSchedules()
+ * @method self                                         setChannelSchedules(array $channelSchedules = [])
  */
 class ListingResponse extends DTO
 {

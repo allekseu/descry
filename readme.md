@@ -38,4 +38,4 @@ return StreamResource::make(
     - The information does not exist
     - The API changed
 - Response times, beyond necessary treatment by the wrapper, are entirely dependent on stations servers.
-    - [:exclamation: May be removed] Descry makes an additional call on manifest URLs to determine if they are DRM protected. These calls are cached for 60 minutes.
+    - [ :exclamation: May be removed] Descry makes an additional call on manifest URLs to determine if they are DRM protected. These calls are cached for 60 minutes.

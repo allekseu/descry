@@ -10,16 +10,16 @@ use Descry\KBS\Utils\Mapper;
 use Illuminate\Support\Carbon;
 
 /**
- * @method \Descry\KBS\Responses\ProgramResponse|null     getProgram()
- * @method self                                                 setProgram(array $program = [])
- * @method string|null                                          getScheduleBroadcast()
- * @method self                                                 setScheduleBroadcast(?string $scheduleBroadcast = null)
- * @method \Illuminate\Support\Carbon|null                      getScheduleDatetimeEnd()
- * @method self                                                 setScheduleDatetimeEnd(\Illuminate\Support\Carbon|null $scheduleDatetimeEnd = null)
- * @method \Illuminate\Support\Carbon|null                      getScheduleDatetimeStart()
- * @method self                                                 setScheduleDatetimeStart(\Illuminate\Support\Carbon|null $scheduleDatetimeStart = null)
- * @method string|null                                          getScheduleId()
- * @method self                                                 setScheduleId(?string $scheduleId = null)
+ * @method \Descry\KBS\Responses\ProgramResponse|null   getProgram()
+ * @method self                                         setProgram(array $program = [])
+ * @method string|null                                  getScheduleBroadcast()
+ * @method self                                         setScheduleBroadcast(?string $scheduleBroadcast = null)
+ * @method \Illuminate\Support\Carbon|null              getScheduleDatetimeEnd()
+ * @method self                                         setScheduleDatetimeEnd(\Illuminate\Support\Carbon|null $scheduleDatetimeEnd = null)
+ * @method \Illuminate\Support\Carbon|null              getScheduleDatetimeStart()
+ * @method self                                         setScheduleDatetimeStart(\Illuminate\Support\Carbon|null $scheduleDatetimeStart = null)
+ * @method string|null                                  getScheduleId()
+ * @method self                                         setScheduleId(?string $scheduleId = null)
  */
 class ScheduleResponse extends DTO
 

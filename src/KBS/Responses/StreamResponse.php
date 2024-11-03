@@ -9,10 +9,10 @@ use Descry\KBS\Responses\TrackResponse;
 use Descry\Utils\DTO;
 
 /**
- * @method \Descry\KBS\Responses\ChannelResponse|null     getChannel()
- * @method self                                                 setChannel(array $channel = [])
- * @method array                                                getChannelTracks()
- * @method self                                                 setChannelTracks(array $channelTracks = [])
+ * @method \Descry\KBS\Responses\ChannelResponse|null   getChannel()
+ * @method self                                         setChannel(array $channel = [])
+ * @method array                                        getChannelTracks()
+ * @method self                                         setChannelTracks(array $channelTracks = [])
  */
 class StreamResponse extends DTO
 {
