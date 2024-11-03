@@ -6,7 +6,7 @@ namespace Descry\KBS\Responses;
 
 use Descry\KBS\Responses\ChannelResponse;
 use Descry\KBS\Responses\TrackResponse;
-use Descry\KBS\Utils\DTO;
+use Descry\Utils\DTO;
 
 /**
  * @method \Descry\KBS\Responses\ChannelResponse|null     getChannel()

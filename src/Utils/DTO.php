@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Descry\KBS\Utils;
+namespace Descry\Utils;
 
 use Illuminate\Support\Str;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Descry\KBS\Responses;
 
 use Descry\KBS\Responses\ProgramResponse;
-use Descry\KBS\Utils\DTO;
+use Descry\Utils\DTO;
 use Descry\KBS\Utils\Mapper;
 use Illuminate\Support\Carbon;
 

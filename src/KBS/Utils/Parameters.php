@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Descry\KBS\Utils;
 
+use Descry\Utils\DTO;
 use Illuminate\Support\Carbon;
 
 /**

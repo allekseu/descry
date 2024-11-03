@@ -6,7 +6,7 @@ use Descry\KBS\Exceptions\ResponseException;
 use Descry\KBS\Exceptions\ValidationException;
 use Descry\KBS\Responses\ListingResponse;
 use Descry\KBS\Responses\StreamResponse;
-use Descry\KBS\Utils\Endpoints;
+use Descry\Utils\Endpoints;
 use Descry\KBS\Utils\Parameters;
 use Composer\CaBundle\CaBundle;
 use Illuminate\Http\Client\PendingRequest;
@@ -81,7 +81,7 @@ class Client
 
         $response = $this->request(
             $this->clientMainV1,
-            Endpoints::GET_STREAM . $channelCode
+            Endpoints::KBS_GET_STREAM . $channelCode
         );
 
         return new StreamResponse($response);
@@ -114,7 +114,7 @@ class Client
 
         $response = $this->request(
             $isVodChannel ? $this->clientMainV1 : $this->clientStatic,
-            $isVodChannel ? Endpoints::GET_SCHEDULE_VOD : Endpoints::GET_SCHEDULE_REGULAR,
+            $isVodChannel ? Endpoints::KBS_GET_SCHEDULE_VOD : Endpoints::KBS_GET_SCHEDULE_REGULAR,
             $parameters
         );
 

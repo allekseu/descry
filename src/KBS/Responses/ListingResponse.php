@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Descry\KBS\Responses;
 
 use Descry\KBS\Responses\ChannelResponse;
-use Descry\KBS\Utils\DTO;
+use Descry\Utils\DTO;
 use Illuminate\Support\Arr;
 
 /**
