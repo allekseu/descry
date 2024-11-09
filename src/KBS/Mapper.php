@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Descry\KBS\Utils;
+namespace Descry\KBS;
+
+use Illuminate\Support\Str;
 
 /**
  * @method string|null mapAreaName(?string $areaCode = null)
@@ -49,6 +51,12 @@ class Mapper
      */
     public static function mapChannelBroadcast(?string $channelBroadcast = null): ?string
     {
+        if (Str::contains($channelBroadcast, "vod")) {
+            $channelBroadcast = "N-VOD편성";
+        } elseif (Str::doesntContain($channelBroadcast, ["정규편성", "N-VOD편성"])) {
+            $channelBroadcast = "정규편성";
+        }
+
         return [
             "정규편성" => "regular",
             "N-VOD편성" => "vod"
@@ -73,8 +81,33 @@ class Mapper
      * @param string|null $channelType
      * @return string|null
      */
+    public static function mapChannelRegion(?string $channelType = null): ?string
+    {
+        if ($channelType == "00") {
+            $channelType = "TV";
+        } elseif (Str::doesntContain($channelType, ["00", "RADIO", "TV"])) {
+            $channelType = "COUNTRY";
+        }
+
+        return [
+            "RADIO" => "national",
+            "TV"    => "national",
+            "COUNTRY"    => "regional"
+        ][$channelType] ?? null;
+    }
+
+    /**
+     * @param string|null $channelType
+     * @return string|null
+     */
     public static function mapChannelType(?string $channelType = null): ?string
     {
+        if (Str::contains($channelType, "TV")) {
+            $channelType = "TV";
+        } elseif (Str::contains($channelType, "라디오")) {
+            $channelType = "RADIO";
+        }
+
         return [
             "RADIO" => "radio",
             "TV"    => "tv"

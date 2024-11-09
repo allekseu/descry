@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Descry\KBS\Responses;
 
 use Descry\Utils\DTO;
-use Descry\KBS\Utils\Scrapper;
 
 /**
  * @method string|null  getTrackBitrate()
- * @method self         setTrackBitrate(?string $trackBitrate = null)
+ * @method self         setTrackBitrate(?string $value = null)
  * @method string|null  getTrackCode()
- * @method self         setTrackCode(?string $trackCode = null)
- * @method bool         getTrackHasDrm()
- * @method self         setTrackHasDrm(?string $trackUrl = null)
+ * @method self         setTrackCode(?string $value = null)
  * @method string|null  getTrackType()
- * @method self         setTrackType(?string $trackType = null)
+ * @method self         setTrackType(?string $value = null)
  * @method string|null  getTrackUrl()
- * @method self         setTrackUrl(?string $trackUrl = null)
+ * @method self         setTrackUrl(?string $value = null)
  */
 class TrackResponse extends DTO
 {
@@ -32,11 +29,6 @@ class TrackResponse extends DTO
     protected ?string $trackCode = null;
 
     /**
-     * @var bool $trackHasDrm
-     */
-    protected bool $trackHasDrm = false;
-
-    /**
      * @var string|null $trackType
      */
     protected ?string $trackType = null;
@@ -47,7 +39,7 @@ class TrackResponse extends DTO
     protected ?string $trackUrl = null;
 
     /**
-     * @param array $apiResponse
+     * @param  array  $apiResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -57,7 +49,6 @@ class TrackResponse extends DTO
 
             $this->setTrackBitrate(isset($apiResponse->bitrate) ? $apiResponse->bitrate : null)
                 ->setTrackCode(isset($apiResponse->channel_id) ? (string) $apiResponse->channel_id : null)
-                ->setTrackHasDrm(isset($apiResponse->service_url) ? $apiResponse->service_url : null)
                 ->setTrackType(isset($apiResponse->media_type) ? $apiResponse->media_type : null)
                 ->setTrackUrl(isset($apiResponse->service_url) ? $apiResponse->service_url : null);
         }
@@ -72,12 +63,12 @@ class TrackResponse extends DTO
     }
 
     /**
-     * @param string|null $trackBitrate
+     * @param  string|null  $value
      * @return self
      */
-    public function setTrackBitrate(?string $trackBitrate = null): self
+    public function setTrackBitrate(?string $value = null): self
     {
-        $this->trackBitrate = $trackBitrate;
+        $this->trackBitrate = $value;
 
         return $this;
     }
@@ -91,31 +82,12 @@ class TrackResponse extends DTO
     }
 
     /**
-     * @param string|null $trackCode
+     * @param  string|null  $value
      * @return self
      */
-    public function setTrackCode(?string $trackCode = null): self
+    public function setTrackCode(?string $value = null): self
     {
-        $this->trackCode = $trackCode;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getTrackHasDrm(): bool
-    {
-        return $this->trackHasDrm;
-    }
-
-    /**
-     * @param string|null $trackUrl
-     * @return self
-     */
-    public function setTrackHasDrm(?string $trackUrl = null): self
-    {
-        $this->trackHasDrm = Scrapper::hasDrm($trackUrl);
+        $this->trackCode = $value;
 
         return $this;
     }
@@ -129,12 +101,12 @@ class TrackResponse extends DTO
     }
 
     /**
-     * @param string|null $trackType
+     * @param  string|null  $value
      * @return self
      */
-    public function setTrackType(?string $trackType = null): self
+    public function setTrackType(?string $value = null): self
     {
-        $this->trackType = $trackType;
+        $this->trackType = $value;
 
         return $this;
     }
@@ -148,12 +120,12 @@ class TrackResponse extends DTO
     }
 
     /**
-     * @param string|null $trackUrl
+     * @param  string|null  $value
      * @return self
      */
-    public function setTrackUrl(?string $trackUrl = null): self
+    public function setTrackUrl(?string $value = null): self
     {
-        $this->trackUrl = $trackUrl;
+        $this->trackUrl = $value;
 
         return $this;
     }

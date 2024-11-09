@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Descry\KBS;
 
+use Descry\KBS\Parameters;
 use Descry\KBS\Exceptions\ResponseException;
 use Descry\KBS\Exceptions\ValidationException;
 use Descry\KBS\Responses\ListingResponse;
 use Descry\KBS\Responses\StreamResponse;
-use Descry\Utils\Endpoints;
-use Descry\KBS\Utils\Parameters;
+use Descry\Utils\Endpoint;
 use Composer\CaBundle\CaBundle;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 
 class Client
@@ -38,64 +40,79 @@ class Client
      */
     public function __construct()
     {
-        $this->clientStatic = Http::baseUrl("https://static.api.kbs.co.kr/mediafactory/v1/")->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
-        $this->clientMainV1 = Http::baseUrl("https://pwwwapi.kbs.co.kr/api/v1/")->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
-        $this->clientMainV2 = Http::baseUrl("https://pwwwapi.kbs.co.kr/api/v2/")->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
+        $this->clientStatic = Http::baseUrl("https://static.api.kbs.co.kr/mediafactory/v1/")
+            ->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
+        $this->clientMainV1 = Http::baseUrl("https://pwwwapi.kbs.co.kr/api/v1/")
+            ->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
+        $this->clientMainV2 = Http::baseUrl("https://pwwwapi.kbs.co.kr/api/v2/")
+            ->withOptions(["verify" => CaBundle::getSystemCaRootBundlePath()]);
     }
 
     /**
-     * @param \Illuminate\Http\Client\PendingRequest $client
-     * @param string $endpoint
-     * @param array $parameters
+     * @param  \Illuminate\Http\Client\PendingRequest  $client
+     * @param  object  $endpoint
+     * @param  array  $parameters
+     * @return array
      */
-    private function request(PendingRequest $client, string $endpoint, array $parameters = [])
+    private function request(PendingRequest $client, object $endpoint, array $parameters = []): array
     {
-        $response = $client->withQueryParameters($parameters)->get($endpoint);
+        $response = $client->send(
+            $endpoint->method,
+            $endpoint->url,
+            ["query" => Arr::whereNotNull($parameters)]
+        );
 
-        if ($response->getStatusCode() == Response::HTTP_OK) {
-            return $response->json();
+        if ($response->successful()) {
+            $json = $response->json();
+
+            if (Arr::exists($json, "ret") ? Arr::get($json, "ret") === 0 : !empty($json[0])) {
+                return $json;
+            } else {
+                return [];
+            }
         } else {
             return [Arr::get($response->json(), "error")];
         }
     }
 
     /**
-     * @param \Descry\KBS\Utils\Parameters $parameters
+     * @param  \Descry\KBS\Parameters  $parameters
+     * @param  array  $queryParameters
+     */
+    private function validate(Parameters $parameters, array $queryParameters = []): void
+    {
+        foreach ($queryParameters as $queryParameter) {
+            $function = "get" . Str::studly($queryParameter);
+
+            if (is_array($parameters->$function()) ? empty($parameters->$function()) : !$parameters->$function()) {
+                throw new ValidationException($queryParameter);
+            }
+        }
+    }
+
+    /**
+     * @param  \Descry\KBS\Parameters  $parameters
      * @return \Descry\KBS\Responses\StreamResponse
      */
     public function getStream(Parameters $parameters): StreamResponse
     {
-        if (!$parameters->getAreaCode()) {
-            throw new ValidationException("Missing request parameter: area_code", Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->validate($parameters, ["area_code", "channel_code"]);
 
-        if (!$parameters->getChannelCode()) {
-            throw new ValidationException("Missing request parameter: channel_code", Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $channelCode = $parameters->getAreaCode() != "00" ? "{$parameters->getAreaCode()}_{$parameters->getChannelCode()}" : $parameters->getChannelCode();
-
-        $response = $this->request(
+        $data = $this->request(
             $this->clientMainV1,
-            Endpoints::KBS_GET_STREAM . $channelCode
+            Endpoint::format(Endpoint::KBS_GET_STREAM, [$parameters->getFormalChannelCode()])
         );
 
-        return new StreamResponse($response);
+        return StreamResponse::hydrate($data);
     }
 
     /**
-     * @param \Descry\KBS\Utils\Parameters $parameters
+     * @param  \Descry\KBS\Parameters  $parameters
      * @return \Illuminate\Support\Collection
      */
     public function getListing(Parameters $parameters): Collection
     {
-        if (!$parameters->getAreaCode()) {
-            throw new ValidationException("Missing request parameter: area_code", Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        if (empty($parameters->getChannelCodes())) {
-            throw new ValidationException("Missing request parameter: channel_codes", Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->validate($parameters, ["area_code", "channel_codes"]);
 
         $isVodChannel = !empty(Arr::where($parameters->getChannelCodes(), function (string $channelCode) {
             return str_contains($channelCode, "nvod");
@@ -108,18 +125,18 @@ class Client
             "program_planned_date_to"   => $parameters->getProgramDateEnd()?->format("Ymd") ?? Carbon::today()->format("Ymd")
         ];
 
-        $response = $this->request(
+        $data = $this->request(
             $isVodChannel ? $this->clientMainV1 : $this->clientStatic,
-            $isVodChannel ? Endpoints::KBS_GET_SCHEDULE_VOD : Endpoints::KBS_GET_SCHEDULE_REGULAR,
+            Endpoint::format($isVodChannel ? Endpoint::KBS_GET_SCHEDULE_VOD : Endpoint::KBS_GET_SCHEDULE_REGULAR),
             $parameters
         );
 
-        if ($response && isset($response[0]) && is_array($response[0])) {
-            return collect($response)->map(function (array $listing) {
-                return new ListingResponse($listing);
+        if ($data && isset($data[0]) && is_array($data[0])) {
+            return collect($data)->map(function (array $dataComponent) {
+                return ListingResponse::hydrate($dataComponent);
             });
         } else {
-            throw new ResponseException("API Response Error: " . $response[0], Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new ResponseException($data[0]);
         }
     }
 }

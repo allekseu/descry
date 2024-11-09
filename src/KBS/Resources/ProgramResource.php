@@ -16,6 +16,7 @@ class ProgramResource extends JsonResource
     {
         /** @var \Descry\KBS\Responses\ProgramResponse $this */
         return [
+            "programAspectRatio"    => $this->getProgramAspectRatio(),
             "programBroadcast"      => $this->getProgramBroadcast(),
             "programCode"           => $this->getProgramCode(),
             "programHasSubtitle"    => $this->getProgramHasSubtitle(),

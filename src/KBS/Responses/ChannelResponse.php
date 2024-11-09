@@ -4,30 +4,33 @@ declare(strict_types=1);
 
 namespace Descry\KBS\Responses;
 
+use Descry\KBS\Mapper;
 use Descry\Utils\DTO;
-use Descry\KBS\Utils\Mapper;
+use Illuminate\Support\Str;
 
 /**
  * @method string|null  getAreaCode()
- * @method self         setAreaCode(?string $areaCode = null)
+ * @method self         setAreaCode(?string $value = null)
  * @method string|null  getAreaName()
- * @method self         setAreaName(?string $areaCode = null)
+ * @method self         setAreaName(?string $value = null)
  * @method string|null  getChannelBroadcast()
- * @method self         setChannelBroadcast(?string $channelBroadcast = null)
+ * @method self         setChannelBroadcast(?string $value = null)
  * @method string|null  getChannelCode()
- * @method self         setChannelCode(?string $channelCode = null)
+ * @method self         setChannelCode(?string $value = null)
  * @method string|null  getChannelGroup()
- * @method self         setChannelGroup(?string $channelGroup = null)
+ * @method self         setChannelGroup(?string $value = null)
  * @method string|null  getChannelLogo()
- * @method self         setChannelLogo(?string $channelLogo = null)
+ * @method self         setChannelLogo(?string $value = null)
  * @method string|null  getChannelName()
- * @method self         setChannelName(?string $channelName = null)
+ * @method self         setChannelName(?string $value = null)
  * @method string|null  getChannelNid()
- * @method self         setChannelNid(?string $channelNid = null)
+ * @method self         setChannelNid(?string $value = null)
+ * @method string|null  getChannelRegion()
+ * @method self         setChannelRegion(?string $value = null)
  * @method string|null  getChannelThumbnail()
- * @method self         setChannelThumbnail(?string $channelThumbnail = null)
+ * @method self         setChannelThumbnail(?string $value = null)
  * @method string|null  getChannelType()
- * @method self         setChannelType(?string $channelType = null)
+ * @method self         setChannelType(?string $value = null)
  */
 class ChannelResponse extends DTO
 {
@@ -72,6 +75,11 @@ class ChannelResponse extends DTO
     protected ?string $channelNid = null;
 
     /**
+     * @var string|null $channelRegion
+     */
+    protected ?string $channelRegion = null;
+
+    /**
      * @var string|null $channelThumbnail
      */
     protected ?string $channelThumbnail = null;
@@ -82,7 +90,7 @@ class ChannelResponse extends DTO
     protected ?string $channelType = null;
 
     /**
-     * @param array $apiResponse
+     * @param  array  $apiResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -90,21 +98,37 @@ class ChannelResponse extends DTO
         if (!empty($apiResponse)) {
             $apiResponse = (object) $apiResponse;
 
+            if (isset($apiResponse->channel_code) && Str::contains($apiResponse->channel_code, "_")) {
+                $apiResponse->local_station_code = explode("_", $apiResponse->channel_code)[0];
+                $apiResponse->channel_code = explode("_", $apiResponse->channel_code)[1];
+            }
+
             $this->setAreaCode(isset($apiResponse->local_station_code) ? (string) $apiResponse->local_station_code : null)
                 ->setAreaName(isset($apiResponse->local_station_code) ? $apiResponse->local_station_code : null)
-                ->setChannelBroadcast(isset($apiResponse->pps_kind_label) ? $apiResponse->pps_kind_label : null)
+                ->setChannelBroadcast(
+                    (isset($apiResponse->pps_kind_label) ? $apiResponse->pps_kind_label : null)
+                    ?? (isset($apiResponse->channel_code) ? (string) $apiResponse->channel_code : null)
+                )
                 ->setChannelCode(isset($apiResponse->channel_code) ? (string) $apiResponse->channel_code : null)
-                ->setChannelGroup(isset($apiResponse->channel_group) ? $apiResponse->channel_group : null)
+                ->setChannelGroup(
+                    (isset($apiResponse->channel_group) ? $apiResponse->channel_group : null)
+                    ?? (isset($apiResponse->local_station_code) ? $apiResponse->local_station_code : null)
+                )
                 ->setChannelLogo(isset($apiResponse->image_path_channel_logo) ? $apiResponse->image_path_channel_logo : null)
                 ->setChannelName(
                     (isset($apiResponse->title) ? $apiResponse->title : null)
                     ?? (isset($apiResponse->channel_code_name) ? $apiResponse->channel_code_name : null)
                 )
                 ->setChannelNid(isset($apiResponse->nid) ? (string) $apiResponse->nid : null)
+                ->setChannelRegion(
+                    (isset($apiResponse->channel_type) ? (string) $apiResponse->channel_type : null)
+                    ?? (isset($apiResponse->local_station_code) ? $apiResponse->local_station_code : null)
+                )
                 ->setChannelThumbnail(isset($apiResponse->image_path_video_thumbnail) ? $apiResponse->image_path_video_thumbnail : null)
                 ->setChannelType(
-                    (isset($apiResponse->channel_type) ? $apiResponse->channel_type : null)
+                    (isset($apiResponse->channel_type) && $apiResponse->channel_type != "COUNTRY" ? $apiResponse->channel_type : null)
                     ?? (isset($apiResponse->media_code_name) ? $apiResponse->media_code_name : null)
+                    ?? (isset($apiResponse->title) ? $apiResponse->title : null)
                 );
         }
     }
@@ -118,12 +142,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $areaCode
+     * @param  string|null  $value
      * @return self
      */
-    public function setAreaCode(?string $areaCode = null): self
+    public function setAreaCode(?string $value = null): self
     {
-        $this->areaCode = $areaCode;
+        $this->areaCode = $value;
 
         return $this;
     }
@@ -137,12 +161,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $areaCode
+     * @param  string|null  $value
      * @return self
      */
-    public function setAreaName(?string $areaCode = null): self
+    public function setAreaName(?string $value = null): self
     {
-        $this->areaName = Mapper::mapAreaName($areaCode);
+        $this->areaName = Mapper::mapAreaName($value);
 
         return $this;
     }
@@ -156,12 +180,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelBroadcast
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelBroadcast(?string $channelBroadcast = null): self
+    public function setChannelBroadcast(?string $value = null): self
     {
-        $this->channelBroadcast = Mapper::mapChannelBroadcast($channelBroadcast);
+        $this->channelBroadcast = Mapper::mapChannelBroadcast($value);
 
         return $this;
     }
@@ -175,12 +199,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelCode
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelCode(?string $channelCode = null): self
+    public function setChannelCode(?string $value = null): self
     {
-        $this->channelCode = $channelCode;
+        $this->channelCode = $value;
 
         return $this;
     }
@@ -194,12 +218,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelGroup
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelGroup(?string $channelGroup = null): self
+    public function setChannelGroup(?string $value = null): self
     {
-        $this->channelGroup = $channelGroup;
+        $this->channelGroup = $value;
 
         return $this;
     }
@@ -213,12 +237,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelLogo
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelLogo(?string $channelLogo = null): self
+    public function setChannelLogo(?string $value = null): self
     {
-        $this->channelLogo = $channelLogo;
+        $this->channelLogo = $value;
 
         return $this;
     }
@@ -232,12 +256,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelName
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelName(?string $channelName = null): self
+    public function setChannelName(?string $value = null): self
     {
-        $this->channelName = $channelName;
+        $this->channelName = $value;
 
         return $this;
     }
@@ -251,12 +275,31 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelNid
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelNid(?string $channelNid = null): self
+    public function setChannelNid(?string $value = null): self
     {
-        $this->channelNid = $channelNid;
+        $this->channelNid = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getChannelRegion(): ?string
+    {
+        return $this->channelRegion;
+    }
+
+    /**
+     * @param  string|null  $value
+     * @return self
+     */
+    public function setChannelRegion(?string $value = null): self
+    {
+        $this->channelRegion = Mapper::mapChannelRegion($value);
 
         return $this;
     }
@@ -270,12 +313,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelThumbnail
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelThumbnail(?string $channelThumbnail = null): self
+    public function setChannelThumbnail(?string $value = null): self
     {
-        $this->channelThumbnail = $channelThumbnail;
+        $this->channelThumbnail = $value;
 
         return $this;
     }
@@ -289,12 +332,12 @@ class ChannelResponse extends DTO
     }
 
     /**
-     * @param string|null $channelType
+     * @param  string|null  $value
      * @return self
      */
-    public function setChannelType(?string $channelType = null): self
+    public function setChannelType(?string $value = null): self
     {
-        $this->channelType = Mapper::mapChannelType($channelType);
+        $this->channelType = Mapper::mapChannelType($value);
 
         return $this;
     }

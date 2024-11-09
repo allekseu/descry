@@ -24,6 +24,7 @@ class ChannelResource extends JsonResource
             "channelLogo"       => $this->getChannelLogo(),
             "channelName"       => $this->getChannelName(),
             "channelNid"        => $this->getChannelNid(),
+            "channelRegion"     => $this->getChannelRegion(),
             "channelThumbnail"  => $this->getChannelThumbnail(),
             "channelType"       => $this->getChannelType()
         ];

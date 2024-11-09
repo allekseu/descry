@@ -7,18 +7,53 @@ namespace Descry\Utils;
 use Illuminate\Support\Str;
 
 /**
- * @method static   hydrate(...$parameters)
- * @method array    toArray()
+ * @method static  hydrate(...$parameters)
+ * @method array   toArray()
  */
 class DTO
 {
     /**
-     * @param array $apiResponse
+     * @param  array  $instance
      * @return void
      */
     public function __construct($instance)
     {
         $this->create($instance);
+    }
+
+    /**
+     * @param  array  $parameters
+     * @return self
+     */
+    private function create(array $parameters = []): self
+    {
+        foreach($parameters as $key => $value) {
+            if (property_exists($this, Str::camel($key))) {
+                $value = $this->sanitize($value);
+
+                $function = "set" . Str::studly($key);
+                $this->$function($value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return mixed
+     */
+    private function sanitize(mixed $value): mixed
+    {
+        if (is_string($value)) {
+            $value = Str::squish($value);
+
+            if ($value === "") {
+                $value = null;
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -36,23 +71,5 @@ class DTO
     public function toArray(): array
     {
         return get_object_vars($this);
-    }
-
-    /**
-     * @param array $parameters
-     * @return self
-     */
-    protected function create(array $parameters = []): self
-    {
-        foreach($parameters as $key => $value) {
-            $key = Str::camel($key);
-
-            if (property_exists($this, $key)) {
-                $function = "set" . Str::ucfirst($key);
-                $this->$function($value);
-            }
-        }
-
-        return $this;
     }
 }

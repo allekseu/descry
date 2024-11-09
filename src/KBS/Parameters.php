@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Descry\KBS\Utils;
+namespace Descry\KBS;
 
 use Descry\Utils\DTO;
 use Illuminate\Support\Carbon;
@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @method self                             setChannelCode(?string $channelCode = null)
  * @method array                            getChannelCodes()
  * @method self                             setChannelCodes(array $channelCodes = [])
+ * @method string|null                      getFormalChannelCode()
  * @method \Illuminate\Support\Carbon|null  getProgramDateEnd()
  * @method self                             setProgramDateEnd(\Illuminate\Support\Carbon|string|null $programDateEnd = null)
  * @method \Illuminate\Support\Carbon|null  getProgramDateStart()
@@ -101,6 +102,14 @@ class Parameters extends DTO
         $this->channelCodes = $channelCodes;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFormalChannelCode(): ?string
+    {
+        return $this->getAreaCode() != "00" ? "{$this->getAreaCode()}_{$this->getChannelCode()}" : $this->getChannelCode();
     }
 
     /**

@@ -15,16 +15,20 @@
 
 __Descry__ is a package wrapper of free-to-air Korean television and radio stations APIs for the Laravel framework.
 
-Broadcasters like KBS, EBS, MBC or KTV expose their APIs and streams to clients without protection beyond SSL verifications. Descry serves as an intermediary layer between these APIs and the Laravel framework by calling, sanitizing, scrapping (only when necessary) and formatting the unorganized, unstandardized and sometimes cryptic JSON responses.
+Broadcasters like <a href="https://www.kbs.co.kr/" target="_blank">KBS</a>, <a href="https://www.ebs.co.kr/" target="_blank">EBS</a>, <a href="https://www.imbc.com/" target="_blank">MBC</a> or <a href="https://www.ktv.go.kr/" target="_blank">KTV</a> expose their APIs and streams to clients without protection beyond SSL verifications. Descry serves as an intermediary layer between these APIs and the Laravel framework by calling, sanitizing and formatting the unorganized, unstandardized and sometimes cryptic JSON responses.
+
+## __REQUIREMENTS__
+- PHP 8.3 is required as Descry makes use of <a href="https://www.php.net/releases/8.3/en.php#typed_class_constants" target="_blank">typed class constants</a>.
+- Descry is thought for the Laravel framework. However, the package is self-contained and should work with pretty much anything else as it requires the illuminate/support and illuminate/http dependencies.
 
 ## __USAGE__
 
-The package provides a set of facades, resources and parameters DTOs to directly interface with it in your controllers.
+The package provides a set of facades, resources and parameters DTOs to directly interface with it in your controllers. The end output should be a json response.
 
 ```php
 use Descry\Facades\KBS;
+use Descry\KBS\Parameters;
 use Descry\KBS\Resources\StreamResource;
-use Descry\KBS\Utils\Parameters;
 
 return StreamResource::make(
     KBS::getStream(
@@ -35,7 +39,6 @@ return StreamResource::make(
 
 ## __LIMITATIONS__
 - If a Descry formatted response returns null (or an empty array where applicable) for a value, it either means that:
-    - The information does not exist
-    - The API changed
+    - The information does not exist. There's nothing to do.
+    - The API changed. Please report it as an issue.
 - Response times, beyond necessary treatment by the wrapper, are entirely dependent on stations servers.
-    - [ :exclamation: May be removed ] Descry makes an additional call on manifest URLs to determine if they are DRM protected. These calls can take a few seconds, and are thus cached for 60 minutes.

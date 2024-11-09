@@ -7,12 +7,13 @@ namespace Descry\KBS\Responses;
 use Descry\KBS\Responses\ChannelResponse;
 use Descry\KBS\Responses\TrackResponse;
 use Descry\Utils\DTO;
+use Illuminate\Support\Arr;
 
 /**
  * @method \Descry\KBS\Responses\ChannelResponse|null   getChannel()
- * @method self                                         setChannel(array $channel = [])
+ * @method self                                         setChannel(array $value = [])
  * @method array                                        getChannelTracks()
- * @method self                                         setChannelTracks(array $channelTracks = [])
+ * @method self                                         setChannelTracks(array $value = [])
  */
 class StreamResponse extends DTO
 {
@@ -27,7 +28,7 @@ class StreamResponse extends DTO
     protected array $channelTracks = [];
 
     /**
-     * @param array $apiResponse
+     * @param  array  $apiResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -51,12 +52,12 @@ class StreamResponse extends DTO
     }
 
     /**
-     * @param array $channel
+     * @param  array  $value
      * @return self
      */
-    public function setChannel(array $channel = []): self
+    public function setChannel(array $value = []): self
     {
-        $this->channel = new ChannelResponse($channel);
+        $this->channel = ChannelResponse::hydrate($value);
 
         return $this;
     }
@@ -70,14 +71,14 @@ class StreamResponse extends DTO
     }
 
     /**
-     * @param array $channelTracks
+     * @param  array  $value
      * @return self
      */
-    public function setChannelTracks(array $channelTracks = []): self
+    public function setChannelTracks(array $value = []): self
     {
-        $this->channelTracks = array_map(function (array $response) {
-            return new TrackResponse($response);
-        }, $channelTracks);
+        $this->channelTracks = Arr::map($value, function (array $component) {
+            return TrackResponse::hydrate($component);
+        });
 
         return $this;
     }

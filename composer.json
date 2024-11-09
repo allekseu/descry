@@ -1,6 +1,6 @@
 {
     "name": "allekseu/descry",
-    "description": "A FTA Korean TV and radio stations APIs wrapper, for the Laravel framework.",
+    "description": "A FTA Korean TV and radio stations APIs wrapper, thought for the Laravel framework.",
     "homepage": "https://github.com/allekseu/descry",
     "authors": [
         {
@@ -15,10 +15,8 @@
     "require": {
         "php": "^8.3",
         "composer/ca-bundle": "^1.5",
-        "illuminate/cache": "^11.0.0",
         "illuminate/http": "^11.0.0",
-        "illuminate/support": "^11.0.0",
-        "nesbot/carbon": "^3.0.0"
+        "illuminate/support": "^11.0.0"
     },
     "autoload": {
         "psr-4": {

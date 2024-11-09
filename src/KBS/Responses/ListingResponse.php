@@ -10,9 +10,9 @@ use Illuminate\Support\Arr;
 
 /**
  * @method \Descry\KBS\Responses\ChannelResponse|null   getChannel()
- * @method self                                         setChannel(array $channel = [])
+ * @method self                                         setChannel(array $value = [])
  * @method array                                        getChannelSchedules()
- * @method self                                         setChannelSchedules(array $channelSchedules = [])
+ * @method self                                         setChannelSchedules(array $value = [])
  */
 class ListingResponse extends DTO
 {
@@ -27,7 +27,7 @@ class ListingResponse extends DTO
     protected array $channelSchedules = [];
 
     /**
-     * @param array $apiResponse
+     * @param  array  $apiResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -54,12 +54,12 @@ class ListingResponse extends DTO
     }
 
     /**
-     * @param array $channel
+     * @param  array  $value
      * @return self
      */
-    public function setChannel(array $channel = []): self
+    public function setChannel(array $value = []): self
     {
-        $this->channel = new ChannelResponse($channel);
+        $this->channel = ChannelResponse::hydrate($value);
 
         return $this;
     }
@@ -73,14 +73,14 @@ class ListingResponse extends DTO
     }
 
     /**
-     * @param array $channelSchedules
+     * @param  array  $value
      * @return self
      */
-    public function setChannelSchedules(array $channelSchedules = []): self
+    public function setChannelSchedules(array $value = []): self
     {
-        $this->channelSchedules = array_map(function (array $response) {
-            return new ScheduleResponse($response);
-        }, $channelSchedules);
+        $this->channelSchedules = Arr::map($value, function (array $component) {
+            return ScheduleResponse::hydrate($component);
+        });
 
         return $this;
     }

@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Descry\KBS\Responses;
 
+use Descry\KBS\Mapper;
 use Descry\KBS\Responses\ProgramResponse;
 use Descry\Utils\DTO;
-use Descry\KBS\Utils\Mapper;
 use Illuminate\Support\Carbon;
 
 /**
  * @method \Descry\KBS\Responses\ProgramResponse|null   getProgram()
- * @method self                                         setProgram(array $program = [])
+ * @method self                                         setProgram(array $value = [])
  * @method string|null                                  getScheduleBroadcast()
- * @method self                                         setScheduleBroadcast(?string $scheduleBroadcast = null)
+ * @method self                                         setScheduleBroadcast(?string $value = null)
  * @method \Illuminate\Support\Carbon|null              getScheduleDatetimeEnd()
- * @method self                                         setScheduleDatetimeEnd(\Illuminate\Support\Carbon|null $scheduleDatetimeEnd = null)
+ * @method self                                         setScheduleDatetimeEnd(\Illuminate\Support\Carbon|null $value = null)
  * @method \Illuminate\Support\Carbon|null              getScheduleDatetimeStart()
- * @method self                                         setScheduleDatetimeStart(\Illuminate\Support\Carbon|null $scheduleDatetimeStart = null)
+ * @method self                                         setScheduleDatetimeStart(\Illuminate\Support\Carbon|null $value = null)
  * @method string|null                                  getScheduleId()
- * @method self                                         setScheduleId(?string $scheduleId = null)
+ * @method self                                         setScheduleId(?string $value = null)
  */
 class ScheduleResponse extends DTO
 
@@ -50,7 +50,7 @@ class ScheduleResponse extends DTO
     protected ?string $scheduleId = null;
 
     /**
-     * @param array $trackResponse
+     * @param  array  $trackResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -75,12 +75,12 @@ class ScheduleResponse extends DTO
     }
 
     /**
-     * @param array $program
+     * @param  array  $value
      * @return self
      */
-    public function setProgram(array $program = []): self
+    public function setProgram(array $value = []): self
     {
-        $this->program = new ProgramResponse($program);
+        $this->program = ProgramResponse::hydrate($value);
 
         return $this;
     }
@@ -94,12 +94,12 @@ class ScheduleResponse extends DTO
     }
 
     /**
-     * @param string|null $scheduleBroadcast
+     * @param  string|null  $value
      * @return self
      */
-    public function setScheduleBroadcast(?string $scheduleBroadcast = null): self
+    public function setScheduleBroadcast(?string $value = null): self
     {
-        $this->scheduleBroadcast = Mapper::mapScheduleBroadcast($scheduleBroadcast);
+        $this->scheduleBroadcast = Mapper::mapScheduleBroadcast($value);
 
         return $this;
     }
@@ -113,12 +113,12 @@ class ScheduleResponse extends DTO
     }
 
     /**
-     * @param \Illuminate\Support\Carbon $scheduleDatetimeEnd
+     * @param  \Illuminate\Support\Carbon  $value
      * @return self
      */
-    public function setScheduleDatetimeEnd(?Carbon $scheduleDatetimeEnd = null): self
+    public function setScheduleDatetimeEnd(?Carbon $value = null): self
     {
-        $this->scheduleDatetimeEnd = $scheduleDatetimeEnd;
+        $this->scheduleDatetimeEnd = $value;
 
         return $this;
     }
@@ -132,12 +132,12 @@ class ScheduleResponse extends DTO
     }
 
     /**
-     * @param \Illuminate\Support\Carbon $scheduleDatetimeStart
+     * @param  \Illuminate\Support\Carbon  $value
      * @return self
      */
-    public function setScheduleDatetimeStart(?Carbon $scheduleDatetimeStart = null): self
+    public function setScheduleDatetimeStart(?Carbon $value = null): self
     {
-        $this->scheduleDatetimeStart = $scheduleDatetimeStart;
+        $this->scheduleDatetimeStart = $value;
 
         return $this;
     }
@@ -151,12 +151,12 @@ class ScheduleResponse extends DTO
     }
 
     /**
-     * @param string|null $scheduleId
+     * @param  string|null  $value
      * @return self
      */
-    public function setScheduleId(?string $scheduleId = null): self
+    public function setScheduleId(?string $value = null): self
     {
-        $this->scheduleId = $scheduleId;
+        $this->scheduleId = $value;
 
         return $this;
     }

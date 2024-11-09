@@ -18,7 +18,6 @@ class TrackResource extends JsonResource
         return [
             "trackBitrate"  => $this->getTrackBitrate(),
             "trackCode"     => $this->getTrackCode(),
-            "trackHasDrm"   => $this->getTrackHasDrm(),
             "trackType"     => $this->getTrackType(),
             "trackUrl"      => $this->getTrackUrl()
         ];

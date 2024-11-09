@@ -4,31 +4,38 @@ declare(strict_types=1);
 
 namespace Descry\KBS\Responses;
 
+use Descry\KBS\Mapper;
 use Descry\Utils\DTO;
-use Descry\KBS\Utils\Mapper;
 
 /**
+ * @method string|null  getProgramAspectRatio()
+ * @method self         setProgramAspectRatio(?string $value = null)
  * @method string|null  getProgramBroadcast()
- * @method self         setProgramBroadcast(?string $programBroadcast = null)
+ * @method self         setProgramBroadcast(?string $value = null)
  * @method string|null  getProgramCode()
- * @method self         setProgramCode(?string $programCode = null)
+ * @method self         setProgramCode(?string $value = null)
  * @method bool         getProgramHasSubtitle()
- * @method self         setProgramHasSubtitle(bool $programHasSubtitle = false)
+ * @method self         setProgramHasSubtitle(bool $value = false)
  * @method bool         getProgramHasVideo()
- * @method self         setProgramHasVideo(bool $programHasVideo = true)
+ * @method self         setProgramHasVideo(bool $value = true)
  * @method string|null  getProgramId()
- * @method self         setProgramId(?string $programId = null)
+ * @method self         setProgramId(?string $value = null)
  * @method string|null  getProgramResolution()
- * @method self         setProgramResolution(?string $programResolution = null)
+ * @method self         setProgramResolution(?string $value = null)
  * @method string|null  getProgramTitle()
- * @method self         setProgramTitle(?string $programTitle = null)
+ * @method self         setProgramTitle(?string $value = null)
  * @method string|null  getProgramThumbnail()
- * @method self         setProgramThumbnail(?string $programThumbnail = null)
+ * @method self         setProgramThumbnail(?string $value = null)
  * @method string|null  getProgramUrl()
- * @method self         setProgramUrl(?string $programUrl = null)
+ * @method self         setProgramUrl(?string $value = null)
  */
 class ProgramResponse extends DTO
 {
+    /**
+     * @var string|null $programAspectRatio
+     */
+    protected ?string $programAspectRatio = null;
+
     /**
      * @var string|null $programBroadcast
      */
@@ -75,7 +82,7 @@ class ProgramResponse extends DTO
     protected ?string $programUrl = null;
 
     /**
-     * @param array $apiResponse
+     * @param  array  $apiResponse
      * @return void
      */
     public function __construct(array $apiResponse = [])
@@ -83,7 +90,8 @@ class ProgramResponse extends DTO
         if (!empty($apiResponse)) {
             $apiResponse = (object) $apiResponse;
 
-            $this->setProgramBroadcast(isset($apiResponse->production_type) ? $apiResponse->production_type : null)
+            $this->setProgramAspectRatio(isset($apiResponse->aspect_ratio) ? $apiResponse->aspect_ratio : "16:9")
+                ->setProgramBroadcast(isset($apiResponse->production_type) ? $apiResponse->production_type : null)
                 ->setProgramCode(isset($apiResponse->program_code) ? (string) $apiResponse->program_code : null)
                 ->setProgramHasSubtitle(isset($apiResponse->closed_caption_yn) ? $apiResponse->closed_caption_yn == "Y" : false)
                 ->setProgramHasVideo(isset($apiResponse->radio_open_studio_yn, $apiResponse->media_code_name) ? !($apiResponse->media_code_name == "RADIO" && $apiResponse->radio_open_studio_yn == "N") : true)
@@ -100,18 +108,37 @@ class ProgramResponse extends DTO
     /**
      * @return string|null
      */
+    public function getProgramAspectRatio(): ?string
+    {
+        return $this->programAspectRatio;
+    }
+
+    /**
+     * @param  string|null  $value
+     * @return self
+     */
+    public function setProgramAspectRatio(?string $value = null): self
+    {
+        $this->programAspectRatio = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getProgramBroadcast(): ?string
     {
         return $this->programBroadcast;
     }
 
     /**
-     * @param string|null $programBroadcast
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramBroadcast(?string $programBroadcast = null): self
+    public function setProgramBroadcast(?string $value = null): self
     {
-        $this->programBroadcast = Mapper::mapProgramBroadcast($programBroadcast);
+        $this->programBroadcast = Mapper::mapProgramBroadcast($value);
 
         return $this;
     }
@@ -125,12 +152,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programCode
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramCode(?string $programCode = null): self
+    public function setProgramCode(?string $value = null): self
     {
-        $this->programCode = $programCode;
+        $this->programCode = $value;
 
         return $this;
     }
@@ -144,12 +171,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param bool $programHasSubtitle
+     * @param  bool  $value
      * @return self
      */
-    public function setProgramHasSubtitle(bool $programHasSubtitle = false): self
+    public function setProgramHasSubtitle(bool $value = false): self
     {
-        $this->programHasSubtitle = $programHasSubtitle;
+        $this->programHasSubtitle = $value;
 
         return $this;
     }
@@ -163,12 +190,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param bool $programHasVideo
+     * @param  bool  $value
      * @return self
      */
-    public function setProgramHasVideo(bool $programHasVideo = true): self
+    public function setProgramHasVideo(bool $value = true): self
     {
-        $this->programHasVideo = $programHasVideo;
+        $this->programHasVideo = $value;
 
         return $this;
     }
@@ -182,12 +209,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programId
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramId(?string $programId = null): self
+    public function setProgramId(?string $value = null): self
     {
-        $this->programId = $programId;
+        $this->programId = $value;
 
         return $this;
     }
@@ -201,12 +228,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programResolution
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramResolution(?string $programResolution = null): self
+    public function setProgramResolution(?string $value = null): self
     {
-        $this->programResolution = $programResolution;
+        $this->programResolution = $value;
 
         return $this;
     }
@@ -220,12 +247,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programTitle
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramTitle(?string $programTitle = null): self
+    public function setProgramTitle(?string $value = null): self
     {
-        $this->programTitle = $programTitle;
+        $this->programTitle = $value;
 
         return $this;
     }
@@ -239,12 +266,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programThumbnail
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramThumbnail(?string $programThumbnail = null): self
+    public function setProgramThumbnail(?string $value = null): self
     {
-        $this->programThumbnail = $programThumbnail;
+        $this->programThumbnail = $value;
 
         return $this;
     }
@@ -258,12 +285,12 @@ class ProgramResponse extends DTO
     }
 
     /**
-     * @param string|null $programUrl
+     * @param  string|null  $value
      * @return self
      */
-    public function setProgramUrl(?string $programUrl = null): self
+    public function setProgramUrl(?string $value = null): self
     {
-        $this->programUrl = $programUrl;
+        $this->programUrl = $value;
 
         return $this;
     }
