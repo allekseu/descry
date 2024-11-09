@@ -1,6 +1,10 @@
 <p>
-    <img src=https://img.shields.io/badge/PHP-8.3-%237A86B8?logo=php&logoColor=FFF />
-    <img src=https://img.shields.io/badge/Laravel-11-%23FF2D20?logo=laravel&logoColor=FFF />
+    <picture>
+        <img src=https://img.shields.io/badge/PHP-8.3-%237A86B8?logo=php&logoColor=FFF />
+    </picture>
+    <picture>
+        <img src=https://img.shields.io/badge/Laravel-11-%23FF2D20?logo=laravel&logoColor=FFF />
+    </picture>
 </p>
 
 > [!NOTE]
